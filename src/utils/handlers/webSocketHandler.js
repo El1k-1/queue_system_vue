@@ -1,5 +1,3 @@
-import store from '@/store'
-
 const wsUrl = process.env.VUE_APP_WS_URL_BASE
 
 const connectionsMap = {}
@@ -7,11 +5,10 @@ const connectionsMap = {}
 /** Промежуточная функция обработччик входящих сообщений */
 function globalWSInterseptor (query, events) {
   const _query = JSON.parse(query.data)
-  Object.entries(_query).forEach(([key, value]) => {
-    if (events?.[key]) {
-      events[key](value)
-    }
-  })
+  console.log('zzxc', _query.type)
+  if (_query?.type && events?.[_query?.type]) {
+    events[_query?.type](_query.data)
+  }
 }
 
 /** Обработчик ошибок */
@@ -48,19 +45,26 @@ export default class WebSocketHandler {
    * @param {string} [socketName='base']  default = `base`
    * @param {object} options Дополнительный настройки
    * @param {string} options.envPathName Указывает какой путь брать из `.env` файла default = `VUE_APP_WS_URL_BASE`
+   * @param {object} options.params Добавляет query парамтры к подключению
    */
   constructor (socketName = 'base', options) {
     // const token = localStorage.getItem('token')
     this.#socketName = socketName
-    const token = store.state.user.id
     if (socketName && !connectionsMap?.[socketName]) {
       let _wsUrl = wsUrl
+      let paramsString = ''
       if (options?.envPathName) {
         _wsUrl = process.env[options?.envPathName]
       }
+      if (options?.params) {
+        paramsString = '?'
+        for (const param in options?.params) {
+          paramsString = paramsString.concat(`${param}=${options?.params[param]}`)
+        }
+      }
       if (!_wsUrl) return
       try {
-        const ws = new WebSocketModified(_wsUrl + '?access_token=' + token)
+        const ws = new WebSocketModified(_wsUrl + paramsString)
         this.#socket = ws
         connectionsMap[socketName] = ws
       } catch (err) {

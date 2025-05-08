@@ -6,8 +6,8 @@
     </div>
     <div class="d-flex">
       <router-link to="/services">Услуги</router-link>
-      <router-link to="/services">Список Заявок</router-link>
-      <router-link to="/services">Панель менеджера</router-link>
+      <router-link to="/requests">Список Заявок</router-link>
+      <router-link to="/emplyee">Панель менеджера</router-link>
     </div>
   </div>
 </template>

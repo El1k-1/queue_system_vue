@@ -7,8 +7,8 @@
     <v-divider class="my-4"></v-divider>
     <div class="d-flex h-100 justify-center">
       <div v-if="!listLoading" class="services-container">
-        <v-btn text class="services-container-item" v-for="service in servises" :key="service.id" @click="choseService(service.id)">
-          {{ service.name }}
+        <v-btn text class="services-container-item" height="60px" v-for="service in servises" :key="service.name" @click="choseService(service.name)">
+          {{ service.title }}
         </v-btn>
       </div>
       <div v-else class="loading">
@@ -24,44 +24,51 @@
   </div>
 </template>
 <script>
-import { onMounted, ref } from 'vue'
+import { onMounted, onUnmounted, ref } from 'vue'
 import useNotify from '@/compositions/useNotify.js'
+import WebSocketHandler from '@/utils/handlers/webSocketHandler'
+import { servises } from '@/utils/constants'
 
 export default {
   name: 'ServicesView',
   setup (context) {
     const { showMessage } = useNotify()
     const listLoading = ref(false)
-    const servises = ref([
-      { id: 1, name: 'Погладить Ам Няма' },
-      { id: 2, name: 'Погладить Ам Няма' },
-      { id: 3, name: 'Погладить Ам Няма' },
-      { id: 4, name: 'Погладить Ам Няма' },
-      { id: 5, name: 'Погладить Ам Няма' },
-      { id: 6, name: 'Погладить Ам Няма' },
-      { id: 7, name: 'Погладить Ам Няма' },
-      { id: 8, name: 'Погладить Ам Няма' },
-      { id: 9, name: 'Погладить Ам Няма' }
-    ])
 
-    const choseService = (id) => {
-      showMessage({
-        color: 'error',
-        content: 'Ам ням уже поглажен',
-        timeout: 30000
-      })
-      console.log('Выбран ', id)
+    const choseService = (serviceName) => {
+      ws.send({ type: 'createQuery', data: serviceName })
     }
+    const ws = new WebSocketHandler('base', { params: { screen: 'services' } })
+    ws.subscribe('createQuery', (data) => {
+      if (data === 'success') {
+        showMessage({
+          color: 'success',
+          content: 'Заявка на услугу создана успешно',
+          timeout: 3000
+        })
+      } else {
+        showMessage({
+          color: 'erroe',
+          content: 'Похоже сервер лежит ):',
+          timeout: 3000
+        })
+      }
+    })
 
     onMounted(() => {
       listLoading.value = true
+      // Vue.set(servicesList, 'value', servises)
       // Запрос листа
       listLoading.value = false
+    })
+    onUnmounted(() => {
+      ws.destroy()
     })
     return {
       servises,
       listLoading,
-      choseService
+      choseService,
+      ws
     }
   }
 }
@@ -74,8 +81,8 @@ export default {
   &-container{
     display: grid;
     gap: 12px;
-    grid-template-columns: 1fr 1fr 1fr;
-    grid-template-rows: repeat(10, 40px);
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: repeat(10, 60px);
 
     .v-btn {
         &::v-deep{
