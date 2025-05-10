@@ -1,5 +1,6 @@
 # queue_system_vue
 
+
 ## Project setup
 ```
 npm install
