@@ -19,10 +19,9 @@ const servises = [
   { name: 'utilityDiscount', title: 'Коммунальные льготы' }
 ]
 const queryStatuses = {
-  'В ожидании': { icon: 'mdi-clock', color: 'warning' },
-  'В работе': { icon: 'mdi-account', color: 'success' },
-  Отклонен: { icon: 'mdi-cancel', color: 'error' },
-  Завершено: { icon: 'mdi-account-check ', color: 'secondary' }
+  open: { title: 'В ожидании', icon: 'mdi-clock', color: 'warning' },
+  process: { title: 'В работе', icon: 'mdi-account', color: 'success' },
+  close: { title: 'Завершено', icon: 'mdi-account-check ', color: 'secondary' }
 }
 export {
   servises,

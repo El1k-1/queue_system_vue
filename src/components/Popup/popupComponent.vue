@@ -10,6 +10,7 @@
       >
         <div class="v-popup-header">
           <h3>{{ label }}</h3>
+          <Timer v-if="timer" :time="timer" @timeEnd="$emit('closePopup')"></Timer>
         </div>
         <v-divider class="my-2"></v-divider>
         <div>

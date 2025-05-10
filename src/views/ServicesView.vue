@@ -21,38 +21,44 @@
         />
       </div>
     </div>
+    <Popup v-if="queryNumber" :label="'Заявка создана'" :timer="5000" @closePopup="() => queryNumber = ''">
+      <div class="d-flex direction-column justify-center align-center" style="font-size: 40px;">
+        Ваш номер в очереди: <h2>{{ queryNumber }}</h2>
+      </div>
+    </Popup>
   </div>
 </template>
 <script>
 import { onMounted, onUnmounted, ref } from 'vue'
-import useNotify from '@/compositions/useNotify.js'
+// import useNotify from '@/compositions/useNotify.js'
 import WebSocketHandler from '@/utils/handlers/webSocketHandler'
+import Popup from '@/components/Popup/popupComponent.vue'
 import { servises } from '@/utils/constants'
 
 export default {
   name: 'ServicesView',
+  components: {
+    Popup
+  },
   setup (context) {
-    const { showMessage } = useNotify()
+    // const { showMessage } = useNotify()
     const listLoading = ref(false)
+    const queryNumber = ref('')
 
     const choseService = (serviceName) => {
-      ws.send({ type: 'createQuery', data: serviceName })
+      ws.send({ type: 'create', data: { type: serviceName } })
     }
     const ws = new WebSocketHandler('base', { params: { screen: 'services' } })
-    ws.subscribe('createQuery', (data) => {
-      if (data === 'success') {
-        showMessage({
-          color: 'success',
-          content: 'Заявка на услугу создана успешно',
-          timeout: 3000
-        })
-      } else {
-        showMessage({
-          color: 'erroe',
-          content: 'Похоже сервер лежит ):',
-          timeout: 3000
-        })
-      }
+    ws.subscribe('create', (data) => {
+      queryNumber.value = data.code
+      // showMessage({
+      //   color: 'success',
+      //   content: `Номер вашей заявки ${data.code}`,
+      //   timeout: 5000
+      // })
+      setTimeout(() => {
+        queryNumber.value = ''
+      }, 5000)
     })
 
     onMounted(() => {
@@ -68,6 +74,7 @@ export default {
       servises,
       listLoading,
       choseService,
+      queryNumber,
       ws
     }
   }

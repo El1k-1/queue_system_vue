@@ -5,7 +5,6 @@ const connectionsMap = {}
 /** Промежуточная функция обработччик входящих сообщений */
 function globalWSInterseptor (query, events) {
   const _query = JSON.parse(query.data)
-  console.log('zzxc', _query.type)
   if (_query?.type && events?.[_query?.type]) {
     events[_query?.type](_query.data)
   }

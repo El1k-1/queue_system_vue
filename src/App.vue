@@ -1,10 +1,9 @@
 <template>
   <v-app>
-    <div class="header">
+    <div class="header w-100 space-between">
       <div>
         <h2>Социальный центр</h2>
       </div>
-      <div></div>
     </div>
     <v-main>
       <div class="content">
