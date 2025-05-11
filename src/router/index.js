@@ -7,6 +7,8 @@ import EmployeeView from '@/views/EmployeeView.vue'
 
 Vue.use(VueRouter)
 
+const { BASE_URL } = process.env
+
 const routes = [
   {
     path: '/',
@@ -32,7 +34,7 @@ const routes = [
 
 const router = new VueRouter({
   mode: 'history',
-  base: process.env.BASE_URL,
+  base: BASE_URL,
   routes
 })
 

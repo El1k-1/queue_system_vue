@@ -1,4 +1,4 @@
-const wsUrl = process.env.VUE_APP_WS_URL_BASE
+const { VUE_APP_WS_URL_BASE } = process.env
 
 const connectionsMap = {}
 
@@ -50,7 +50,7 @@ export default class WebSocketHandler {
     // const token = localStorage.getItem('token')
     this.#socketName = socketName
     if (socketName && !connectionsMap?.[socketName]) {
-      let _wsUrl = wsUrl
+      let _wsUrl = VUE_APP_WS_URL_BASE
       let paramsString = ''
       if (options?.envPathName) {
         _wsUrl = process.env[options?.envPathName]

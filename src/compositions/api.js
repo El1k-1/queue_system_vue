@@ -1,16 +1,16 @@
 import Axios from 'axios'
 
-const url = process.env.VUE_APP_API_URL
+const { VUE_APP_API_URL_BASE } = process.env
 
 export default function useApi () {
   const postQuery = async (route, data) => {
-    return await Axios.post(url + route, data)
+    return await Axios.post(VUE_APP_API_URL_BASE + route, data)
   }
   const getQuery = async (route) => {
-    return await Axios.get(url + route)
+    return await Axios.get(VUE_APP_API_URL_BASE + route)
   }
   const checkMe = async (token) => {
-    const result = await Axios.post(url + 'users/me', token)
+    const result = await Axios.post(VUE_APP_API_URL_BASE + 'users/me', token)
     if (result.data.success) {
       return result.data.data.login
     } else {
